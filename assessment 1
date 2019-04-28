@@ -1,0 +1,292 @@
+/* 
+This program allows a user to encrypt and decrypt any body of text through the 
+means of a rotation, or substitution cipher. 
+
+For the rotation cipher, the message text, or cipher text, and rotation amount 
+is supplied by the user. 
+Likewise, the substitution cipher is provided the message text, or cipher text
+and alphabet substitution by the user. 
+
+In the menu that appears immediately after the program is ran, the user is able 
+to enter an integer that correlates with the certain encryption or decryption 
+task that is desired. 
+*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+void taskOne(char a[], int key);
+void taskOneCall(void);
+void taskTwo(char b[], int key);
+void taskTwoCall(void);
+void taskThree(char a[],char code[]);
+void taskThreeCall(void); 
+void taskFourCall(void);
+void menu(void);
+
+/*----------------------------------------------------------------------------*/
+
+int main () {
+    menu();   // The 'menu' function is called immediately after the program is ran. This prompts a user friendly menu that is able to guide the user through the assessment task. 
+    return 0;   
+}
+void menu(void) {   // The 'menu' function is defined. The input and return values are void. The function prompts a user friendly menu to the user. 
+    int menuNum;   // The 'menuNum' integer is intialised. This variable will be used to determine which task is presented to the user. 
+    
+    printf("\nEnter an integer between 0 and 5, based on the options described below: \n\n 1. Encryption of a message with a rotation cipher given the message text and rotation amount. \n 2. Decryption of a message encrypted with a rotation cipher given cipher text and rotation amount. \n 3. Encryption of a message with a substitution cipher given message text and alphabet substitution. \n 4. Decryption of a message encrypted with a substitution cipher given cipher text and substitutions \n");   // The user is asked to enter an integer that correlates with the tasks available to them.   
+    scanf("%d", &menuNum);   // The integer entered in the previous line is scanned in the memory of the computer as 'menuNum'. 
+    
+    switch (menuNum) {
+        case 1: taskOneCall(); break;   // If the user enters '1', Task 1 is called. 
+        case 2: taskTwoCall(); break;   // If the user enters '2', Task 2 is called. 
+        case 3: taskThreeCall(); break;   // If the user enters '3', Task 3 is called. 
+        case 4: taskFourCall(); break;   // If the user enters '4', Task 4 is called. 
+        default: printf("\nThe integer previously entered was invalid. Please try again.\n\n");    
+        menu();   // If the user enters an integer that is not within the range of 1 - 4, they are informed that the integer is invalid and redireted to the beginning of the menu function, allowing them to try again.
+    }
+    
+    return;
+    
+}
+
+/*----------------------------------------------------------------------------*/
+
+void taskOneCall()   // If the integer '1' is supplied in the menu, the user is directed to Task 1 through the function 'taskOneCall'. 
+{
+    int key;   // The integer 'key', the amount of the rotation of the cipher, is intialised.                                            
+    char a[100];   // The string entered by the user, that is later encrypted, is initialised as the variable 'a'. 
+    int option;   // The integer 'option' is initialised. 
+    
+    printf("\nYou have selected Task 1 - Encryption of a message with a rotation cipher given the message text and rotation amount.\n\n");   // The selected task and its function is displayed the user. 
+    
+    printf("Enter the text that you wish to encrypt: ");   // The user inputs the string that they wish to encrypt.   
+    scanf(" %[^\n]s", a);   // The string entered by the user is scanned into the memory of the computer as the variable 'a'. 
+    
+    printf("Enter an integer between 0 and 27 to determine the rotation amount of the encryption: ");   // The user enters an integer that determines the amount each individual character of the string entered previously is rotated by. 
+    scanf("%d", &key);   // The amount entered in the line above is scanned into the memory of the computer as the variable 'key'. 
+    if (key <= 0 || key >= 27)   // If the integer entered as 'key' is not within the range of 1 - 26, the following is executed. 
+    {
+        printf("The value of the key entered is invalid. Please try again.\n");              
+        taskOneCall();   // The user recieves a message that informs them that the supplied integer is invalid and will then be returned to the beginning of Task 1.  
+    }
+    printf("The encrypted text reads: "); // The encrypted message is displayed to the user. 
+    taskOne(a, key);                      // The 'taskOne' function is called after the line above because the encrypted text is printed character by character and the function is of type 'void', meaning the function is not returning any data. This means that the function cannot be assigned a data type and thus cannot be called on the same line as above. If it was called on the same line, the encrypted text would print before the "The ecrypted text reads:" component. 
+    
+    printf("\n\nTask 1 is now complete. Please enter the key '1' to return to the main menu or '2' to initiate Task 1 again.\n"); // The user is informed that the task is complete and is allowed the option of returning to the main menu or restarting the task. 
+    scanf("%d", &option);   // The integer entered by the user is scanned into the memory of the computer as the variable 'option'. 
+    if (option == 1) 
+    {                                                                                                        
+        menu(); // If the user inputs '1', they are returned to the main menu where they can continue to select another task. 
+    } else if (option == 2) 
+    {
+        taskOneCall(); // If the user inputs '2', they are returned to the beginning of the task. 
+    } else 
+    {   printf("The entered key is invalid. Run the program again to manually return to main menu.");   // If the user enters an integer that is neither '1' or '2', they are informed that the integer is invalid and is then provided instructions to manually return to the main menu. 
+    }
+}
+void taskOne(char a[], int key) { // The 'taskOne' function is defined. The inputs are the message text supplied by the user and the rotation amount, respectively. The return value is void. The function encrypts a message supplied by the user through the means of a rotation cipher. 
+  
+    int i;   // The integer 'i' is initialised. This variable is used as a counter throughout Task 1. 
+    char b[100];   // The string that is going to be the encrypted text is intialised as the variable 'b'. 
+    
+    for (i = 0; i <strlen(a); i++) // A 'for' loop is established that systematically assesses and alters each character of the string supplied by the user. 
+        {
+            if (a[i] >= 65 && a[i] <= 90 || a[i] >= 97 && a[i] <= 122 ) // If each individual character of the string 'a' (the original message supplied by the user) is within the range of 'a' - 'z' or 'A' - 'Z', the following is executed. 
+            { 
+                b[i] = a[i] + key;   // Each individual character of the string 'a' is incremented by the value of the 'key' supplied by the user. This incremented value becomes the value of the character of the encrypted text (b[i]). 
+            } else
+            {
+                b[i] = a[i];   // If a character of the string 'a' is NOT within the range of a' - 'z' or 'A' - 'Z', the value of the character of string 'a' is directly transferred to the value of the character of string 'b', the encrypted text. This allows characters that are not letters to be free of encryption. 
+            }
+            
+                 if (b[i] >= 'a' && b[i] <= 'z')   // If any character of the encrypted message 'b' is lower case, the following is executed. 
+                {
+                   b[i] = toupper(b[i]);   // Any lower case character of the encrypted message 'b' is converted to upper case. 
+                }
+                if (b[i] > 90) // If any character of the encrypted message 'b' is greater than the value 90, or 'Z', the following is executed.
+    {
+        b[i] = b[i] - 26; // The value of the character that exceeds the value of 'Z' is reduced by 26. This allows all characters of the encrypted message to stay within the upper case alphabet, or the range 65 - 90. Otherwise, the encrypted text would display irrelevant ASCII values. 
+    }
+                  printf("%c", b[i]); // Each time the loop is executed, each character of the encrypted text is individually displayed.
+        }
+}
+
+/*----------------------------------------------------------------------------*/
+
+void taskTwoCall() // If the integer '2' is supplied in the menu, the user is directed to Task 2 through the function 'taskTwoCall'. 
+{
+    int key;   // The integer 'key', the amount of the rotation of the cipher, is intialised.   
+    char b[100];   // The string entered by the user, that is later decrypted, is initialised as the variable 'b'.
+    int option;   // The integer 'option' is initialised. 
+    
+    printf("\nYou have selected Task 2 - Decryption of a message encrypted with a rotation cipher given cipher text and rotation amount.\n\n");   // The selected task and its function is displayed to the user.
+    
+    printf("Enter the text that you wish to decrypt: ");   // The user inputs the string they wish to decrypt. 
+    scanf(" %[^\n]s", b);   // The string entered by the user in scanned into the memory of the computer as the variable 'b'. 
+    
+    printf("Enter an integer between 0 and 27 to determine the rotation amount of the decryption: ");   // The user enters an integer that determines the amount each individual character of the string entered previously is rotated by.  
+    scanf("%d", &key);   // The amount entered in the line above is scanned into the memory of the computer as the variable 'key'. 
+    if (key <= 0 || key >= 27) // If the integer entered as 'key' is not within the range of 1 - 26, the following is executed. 
+    {
+    printf("The value of the key entered is invalid. Please try again.\n"); 
+        taskTwoCall();   // The user recieves a message that informs them that the supplied integer is invalid and will then be returned to the beginning of Task 2. 
+    }
+    
+    printf("The encrypted text reads: ");   // The decrypted message is displayed to the user. 
+    taskTwo(b, key);   // The 'taskTwo' function is called after the line above because the dencrypted text is printed character by character and the function is of type 'void', meaning the function is not returning any data. This means that the function cannot be assigned a data type and thus cannot be called on the same line as above. If it was called on the same line, the decrypted text would print before the "The decrypted text reads:" component. 
+    
+    printf("\n\nTask 2 is now complete. Please enter the key '1' to return to the main menu or '2' to initiate Task 2 again.\n");   // The user is informed that the task is complete and is allowed the option of returning to the main menu or restarting the task.
+    scanf("%d", &option);   // The integer entered by the user is scanned into the memory of the computer as variable 'option'. 
+    if (option == 1) 
+    {
+        menu();   // If the user inputs '1', they are returned to the main menu where they can continue to select another task. 
+    } else if (option == 2) 
+    {
+        taskTwoCall();   // If the user inputs '2', they are returned to the beginning of the task. 
+    } else 
+    {   printf("The entered key is invalid. Run the program again to manually return to main menu."); // If the user enters an integer that is neither '1' or '2', they are informed that the integer is invalid and is then provided instructions to manually return to the main menu. 
+    }
+    
+}
+void taskTwo(char b[], int key) { // The function 'taskTwo' is defined. The inputs are the cipher text supplied by the user and the rotation amount, respectively. The return value is void. The function decrypts a cipher text supplied by the user through the means of a rotation cipher. 
+  
+    int i;   // The integer 'i' is initialised. This variable is used as a counter throughout Task 2. 
+    char a[100];   //The string that is going to be the decrypted text is initialised as the variable 'a'. 
+    
+    for (i = 0; i <strlen(b); i++)   // A 'for' loop is established that systematically assesses and alters each character of the encrypted string. 
+        {
+            if (b[i] >= 65 && b[i] <= 90 || b[i] >= 97 && b[i] <= 122 ) // If each individual character of the string 'b' (the encrypted message supplied by the user) is within the range of 'a' - 'z' or 'A' - 'Z', the following is executed. 
+            { 
+                a[i] = b[i] - key;   // Each individual character of the encrypted text 'b' is decremented by the value of the 'key' supplied by the user. This decremented value becomes the value of the character of the decrypted text (a[i]). 
+            } else 
+            {
+                a[i] = b[i];   // If a character of the string 'b' is NOT within the range of 'a' - 'z' or 'A' - 'Z', the value of the character of string 'b' is directly transferred to the value of the character of string 'a', the decrypted text. This allows characters that are not latters to be free of decryption. 
+            }
+            
+                 if (a[i] >= 'a' && a[i] <= 'z') // If any character of the decrypted message 'a', is lower case the following is executed. 
+                {
+                   a[i] = toupper(a[i]);   // Any lower case character of the decrypted message 'a' is converted to upper case. 
+                }
+                    if (a[i] > 90)    // If any character of the decrypted message 'a' is greater than the value 90, or 'Z', the following is executed.
+                {
+                     a[i] = a[i] - 26;   // The value of the character that exceeds the value of 'Z' is reduced by 26. This allows all characters of the decrypted message to stay within the upper case alphabet, or the range 65 - 90. Otherwise, the decrypted text would display irrelevant ASCII values. 
+                } 
+                if (a[i] >= 'A' && a[i] <= 'Z')   // The following is only executed if the encrypted text is within the range of upper case letters. The ensures any characters that are not letters are not altered. 
+                {
+                    if (a[i] < 65)   // If any upper case character has an ASCII value below 65, or 'A', the following is executed. 
+                    {
+                        a[i] = a[i] + 26;   // The character of the decrypted character that is less than 65 is incremented by the value of 26. This ensures all letters of the decrypted text are kept in the upper case range. 
+                    }  
+                }
+                  printf("%c", a[i]);   // Each time the loop is executed, each character of the decrypted text is individually displayed.
+        }
+}
+
+/*----------------------------------------------------------------------------*/
+
+void taskThreeCall(void)   // If the integer '3' is supplied in the menu, the user is directed to Task 3 through the function 'taskThreeCall'. 
+{
+    int option;   // The integer 'option' is initialised. 
+    char a[100];   // The string 'a', the text that will later be encrypted, is initialised. 
+    char code[26];   // The string 'code', the variable that will be assigned to the rearranged alphabet, is initialised. 
+    
+    printf("\nYou have selected Task 3 - Encryption of a message with a substitution cipher given message text and alphabet substitution.\n\n");   // The selected task and its function is displayed. 
+    
+    printf("Enter the text you wish to encrypt: ");   // The user inputs the string that they wish to encrypt. 
+    scanf(" %[^\n]s", a);   // The string entered by the user is scanned into the memory of the computer as the variable 'a'. 
+    
+    printf("Enter a rearranged alphabet of 26 characters that will act as the key for the encryption: ");   //The user enters a string of 26 characters that will become the rearranged alphabet of the cipher. 
+    scanf("%s", code);   // The rearranged alphabet is stored in the memory of the computer as the variable 'code. '
+    
+    printf("The encrypted text reads: ");   // The encrypted message is displayed to the user.
+    taskThree(a, code);   // The 'taskThree' function is called after the line above because the encrypted text is printed character by character and the function is of type 'void', meaning the function is not returning any data. This means that the function cannot be assigned a data type  and thus cannot be called on the same line as above. If it was called on the same line, the encrypted text would print before the "The ecrypted text reads:" component. 
+    
+    printf("\n\nTask 3 is now complete. Please enter the key '1' to return to the main menu or '2' to initiate Task 3 again.\n");   // The user is informed that the task is complete and is allowed the option of returning to the main menu or restarting the task. 
+    scanf("%d", &option);   // The integer entered by the user is scanned into the memory of the computer as the variable 'option'. 
+    if (option == 1) {
+        menu();   // If the user inputs '1', they are returned to the main menu where they can continue to select another task. 
+    } else if (option == 2) {
+            taskThreeCall();   // If the user inputs '2', they are returned to the beginning of the task. 
+    } else { printf("The entered key is invalid. Run the program again to manually return to main menu."); // If the user enters an integer that is neither '1' or '2', they are informed that the integer is invalid and is then provided instructions to manually return to the main menu. 
+    }
+}
+    void taskThree(char a[],char code[]) // The 'taskThree' function is defined. The inputs are the message text supplied by the user and the alphabet substition, respectively. The return value is void. The function encrypts a message supplied by the user through the means of a substitution cipher. 
+    {
+        int i;   // The integer 'i' is initialised. This variable is used as a counter throughout task 3. 
+        char b[100];   // The string that is going to be the encrypted text is initialised as the variable 'b'. 
+        
+        for (i = 0; i < strlen(a); i++)   // A 'for' loop is established that systematically assesses and alters each character of the string 'a' supplied by the user. 
+        {
+            if (a[i] >= 'a' && a[i] <= 'z')   // If any character of the original message supplied by the user is within the range of 'a' - 'z', the following is executed. 
+            {
+                a[i] = toupper(a[i]);   // Any lower case character of the original message is converted to upper case. 
+            }
+            int encryptionIndex = a[i] - 65;   // The integer 'encryptedIndex' is intialised. This variable reduces each character of the original message to a certain value. 
+            if(encryptionIndex >= 0 && encryptionIndex < 26)   // If value of 'encryptionIndex' is between the rang of 0 - 26, the following is executed. 
+              {
+                b[i] = code[encryptionIndex];   // The rearranged alphabet at the value of 'encryptionIndex' is assigned to the character of the encrypted message (b[i]).
+              }
+              else 
+              {
+               b[i] = a[i];   // If the value of 'encryptionIndex' is not within the range of 0 - 26, the value of the character of string 'a' is directly transferred to the the value of the character of string 'b', the encrypted text. This allows characters that are not letters to be free of encryption. 
+              }
+              if (b[i] >= 'a' && b[i] <= 'z')   // If any character of the encrypted text 'b' is lower case, the following is executed. 
+              {
+                  b[i] = toupper(b[i]);   // Any character of the encrypted text that is lower case, is converted to upper case. 
+              } 
+                  printf("%c", b[i]);   //Each time the loop is executed, each character of the encrypted tetx is individually displayed. 
+              }
+    }
+
+/*----------------------------------------------------------------------------*/
+
+void taskFourCall(void)
+{
+    int i, k;   // The integers 'i' and 'k' are initialised. These integers will be used as counters throughout Task 4. 
+    char b[100];   // The string entered by the user, that is later decrypted, is initialised as the variable 'b'.
+    char norm[26] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};   // The regular alphabet is initalised as the variable 'norm'. 
+    char code[26];   // The string 'code', the rearranged alphabet that is used to encrypt the original message, is initialised. 
+    int option;   // The integer 'option' is initialised. 
+    
+    printf("\nYou have selected Task 4 - Decryption of a message encrypted with a substitution cipher given cipher text and substitution.\n\n");   // The selected task and its function is displayed to the user. 
+    
+    printf("Enter the text you wish to decrypt: ");   // The user inputs the string they wish to decrypt. 
+    scanf(" %[^\n]s", b);   // The string entered by the user is scanned into the memory of the computer as the variable 'b'. 
+    
+    printf("Enter a rearranged alphabet of 26 characters that will act as the key for the decryption: ");   // The user manually inputs a rearranged alphabet that acts as the key of decryption. 
+    scanf("%s", code);   // The rearranged is scanned into the memory of the computer as the variable 'code'. 
+    
+    for (i = 0; i < 26; i++)  // A 'for' loop is established that systematically assesses each character of the decrypted text. 
+    {
+        if (b[i] >= 'a' && b[i] <= 'z')   // If each individual character of the string 'b' (the encrypted message that is supplied by the user) is lower case, the following is executed. 
+        b[i] = toupper(b[i]);   // Any lower case character of the encrypted text 'b' is converted to upper case. 
+    }
+
+    for (k = 0; k < strlen(b); k++)   // A 'for' loop is established that systematically works through each individual character of the encrypted message 'b'. 
+    {
+        for (i = 0; i < 26; i++)   // A secondary 'for' loop is established that increments from 0 to 26 (The total range of the normal and rearranged alphabet). 
+        {
+            if (b[k] == code[i])   // If the encrypted text at a certain character is the same as a certain character in the rearranged alphabet, the following is executed. 
+            {
+                b[k] = norm[i];   // The character of the regular alphabet becomes the character of the encrypted text, becoming the decrypted text. 
+                break;   // Once the line above is executed, the 'for' loop is exited. 
+            }
+        }
+    }
+    
+    printf("\nThe decrypted text reads: %s\n", b);   // The new, decrypted message 'b' is displayed to the user. 
+    
+    printf("\n\nTask 4 is now complete. Please enter the key '1' to return to the main menu or '2' to initiate Task 4 again.\n");   // The user is informed that the task is complete and is offered the option of returning to the main menu or restarting the task. 
+    scanf("%d", &option);   // The integer entered by the user is scanned into the memory of the computer as variable 'option'. 
+    if (option == 1) 
+    {
+        menu();   // If the user inputs '1', they are returned to the main menu where they can continue to select another task. 
+    } else if (option == 2) 
+    {
+            taskFourCall();   // If the user inputs '2', they are returned to the beginning of the task. 
+    } else 
+    { printf("The entered key is invalid. Run the program again to manually return to main menu.");   // If the user enters an integer that is neither '1' or '2', they are informed that the integer is invalid and is then provided instruction to manually return to the main menu. 
+    }
+}
